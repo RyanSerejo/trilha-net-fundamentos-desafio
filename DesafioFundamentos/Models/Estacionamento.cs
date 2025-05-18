@@ -6,6 +6,43 @@ namespace DesafioFundamentos.Models
         private decimal precoPorHora = 0;
         private List<string> veiculos = new List<string>();
 
+
+        private bool FormatoValido(string placa)
+        {
+            //aqui estou considerando um formato de placa como vi na aula "ABC-1234";
+            if (placa.Length != 8) return false;
+            if (placa[3] != '-') return false;//poderia tirar essa parte se considerar que a pessoa não vai digitar a placa com hífem, pois seria 7 caracteres.
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (!char.IsLetter(placa[i])) return false;
+            }
+
+            for (int i = 4; i < 7; i++)
+            {
+                if (!char.IsDigit(placa[i])) return false;
+            }
+            //Minha verificação se resume em ver se as posições especificadas são números ou letras.
+            // Se passou em todos os casos é formato válido.
+            return true;
+        }
+
+        private string DigitePlaca()
+        {
+            string placa;
+            placa = Console.ReadLine();
+            if (FormatoValido(placa))
+            {
+                return placa;
+            }
+            else
+            {
+                Console.WriteLine("Formato de placa inválido, por favor digite a placa no formato : ABC-1234");
+                placa = "";
+                return placa;
+            }
+        }
+
         public Estacionamento(decimal precoInicial, decimal precoPorHora)
         {
             this.precoInicial = precoInicial;
@@ -15,17 +52,25 @@ namespace DesafioFundamentos.Models
         public void AdicionarVeiculo()
         {
             // TODO: Pedir para o usuário digitar uma placa (ReadLine) e adicionar na lista "veiculos"
-            // *IMPLEMENTE AQUI*
+            // *IMPLEMENTADO*
             Console.WriteLine("Digite a placa do veículo para estacionar:");
+            string placa = DigitePlaca();
+            if (placa == "")
+            {
+                Console.WriteLine("Placa não adicionada ao estacionamento.");
+                return;
+            }
+            veiculos.Add(placa);
         }
 
         public void RemoverVeiculo()
         {
             Console.WriteLine("Digite a placa do veículo para remover:");
-
+            
             // Pedir para o usuário digitar a placa e armazenar na variável placa
-            // *IMPLEMENTE AQUI*
+            // *IMPLEMENTADO*
             string placa = "";
+            placa = DigitePlaca();
 
             // Verifica se o veículo existe
             if (veiculos.Any(x => x.ToUpper() == placa.ToUpper()))
@@ -34,12 +79,14 @@ namespace DesafioFundamentos.Models
 
                 // TODO: Pedir para o usuário digitar a quantidade de horas que o veículo permaneceu estacionado,
                 // TODO: Realizar o seguinte cálculo: "precoInicial + precoPorHora * horas" para a variável valorTotal                
-                // *IMPLEMENTE AQUI*
-                int horas = 0;
-                decimal valorTotal = 0; 
+                // *IMPLEMENTADO*
+                decimal horas = 0;
+                horas = Convert.ToDecimal(Console.ReadLine());
+                decimal valorTotal = precoInicial + precoPorHora * horas;
 
                 // TODO: Remover a placa digitada da lista de veículos
-                // *IMPLEMENTE AQUI*
+                // *IMPLEMENTADO*
+                veiculos.Remove(placa);
 
                 Console.WriteLine($"O veículo {placa} foi removido e o preço total foi de: R$ {valorTotal}");
             }
@@ -48,7 +95,7 @@ namespace DesafioFundamentos.Models
                 Console.WriteLine("Desculpe, esse veículo não está estacionado aqui. Confira se digitou a placa corretamente");
             }
         }
-
+        
         public void ListarVeiculos()
         {
             // Verifica se há veículos no estacionamento
@@ -56,7 +103,11 @@ namespace DesafioFundamentos.Models
             {
                 Console.WriteLine("Os veículos estacionados são:");
                 // TODO: Realizar um laço de repetição, exibindo os veículos estacionados
-                // *IMPLEMENTE AQUI*
+                // *IMPLEMENTADO*
+                foreach (string v in veiculos)
+                {
+                    Console.WriteLine(v);
+                }
             }
             else
             {
